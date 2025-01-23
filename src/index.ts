@@ -12,16 +12,22 @@ const MODEL_MAP = {
 // 获取命令行参数
 const params = process.argv.slice(2);
 const modelIndex = params.indexOf('-t');
-let model = 'chat';
+let model = 'chat', MAX_HISTORY = 1;
+
+if (!process.env.KEY) {
+    console.error('请设置KEY');
+    process.exit(1);
+}
 
 if (modelIndex >= 0) {
     model = params[modelIndex + 1];
     params.splice(modelIndex, 2);
 }
+const historyCountIndex = params.indexOf('-n');
 
-if (!process.env.KEY) {
-    console.error('请设置KEY');
-    process.exit(1);
+if (historyCountIndex >= 0) {
+    MAX_HISTORY = parseInt(params[historyCountIndex + 1]);
+    params.splice(historyCountIndex, 2);
 }
 
 // 初始化 OpenAI 客户端
@@ -35,10 +41,8 @@ if (!fs.existsSync(path.join(__dirname, 'chats'))) {
     fs.mkdirSync(path.join(__dirname, 'chats'), { recursive: true });
 }
 
-// 将 HISTORY_FILE 的路径修改为相对于当前项目目录
-const HISTORY_FILE = path.join(__dirname, 'chats', '.chat_history.json');
-
-const MAX_HISTORY = 3;
+// 将 HISTORY_FILE 的路径修改为相对于当前项目目录，并在文件名中加入模型信息
+const HISTORY_FILE = path.join(__dirname, 'chats', `${new Date().toISOString().split('T')[0]}_${MODEL_MAP[model as keyof typeof MODEL_MAP]}_chat_history.json`);
 
 // 添加接口定义
 interface HistoryEntry {
@@ -51,23 +55,20 @@ interface HistoryEntry {
 // 读取历史记录
 export function loadHistory(): HistoryEntry[] {
     try {
-        if (fs.existsSync(HISTORY_FILE)) {
-            const data = fs.readFileSync(HISTORY_FILE, 'utf8');
-            const history = JSON.parse(data) as HistoryEntry[];
-
-            // 检查最早的记录是否超过2小时
-            const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
-            const validHistory = history.filter(entry =>
-                entry.timestamp && entry.timestamp > twoHoursAgo
-            );
-
-            // 如果有过期的记录，立即更新文件
-            if (validHistory.length < history.length) {
-                saveHistory(validHistory as OpenAI.Chat.ChatCompletionMessageParam[]);
-            }
-
-            return validHistory.slice(-MAX_HISTORY);
+        if (!fs.existsSync(HISTORY_FILE)) {
+            // 如果文件不存在，创建空数组并保存
+            saveHistory([]);
+            return [];
         }
+
+        const data = fs.readFileSync(HISTORY_FILE, 'utf8');
+        let history: HistoryEntry[] = [];
+        try {
+            history = JSON.parse(data) as HistoryEntry[];
+        } catch (error) {
+            console.error('Error parsing history:', error);
+        }
+        return history;
     } catch (error) {
         console.error('Error loading history:', error);
     }
@@ -88,19 +89,33 @@ export async function handleStreamResponse(completion: any, callback: (content: 
     let isHeader = true;
     try {
         for await (const chunk of completion.iterator()) {
+            // 检查是否中止
             if (completion.controller.signal.aborted) {
                 console.log('Stream processing aborted!');
                 return;
             }
 
-
             const content = chunk.choices[0]?.delta?.content;
-            if (isHeader && content !== '\n') {
-                isHeader = false;
+
+            // 处理头部换行
+            if (isHeader) {
+                if (content !== '\n') {
+                    isHeader = false;
+                    process.stdout.write('\n');
+                }
+                continue;
             }
-            if (!isHeader && content) {
+
+            // 处理内容输出
+            if (content) {
                 process.stdout.write(content);
-                !isHeader && content && callback(content);
+                callback(content);
+            }
+
+            // 处理结束标记
+            if (chunk.choices[0]?.finish_reason === 'stop') {
+                process.stdout.write('\n');
+                break; // 明确结束循环
             }
         }
     } catch (error) {
@@ -113,22 +128,20 @@ export async function main() {
         // 加载历史记录
         let messageHistory = loadHistory();
 
+        // 保持历史记录在最大长度限制内
+        const latestMessageHistory = messageHistory.slice(-MAX_HISTORY * 2);
+
         // 添加用户新消息到历史记录（添加时间戳）
-        messageHistory.push({
+        latestMessageHistory.push({
             role: 'user',
             content: params.join(' '),
             timestamp: Date.now()
         });
 
-        // 保持历史记录在最大长度限制内
-        if (messageHistory.length > MAX_HISTORY) {
-            messageHistory = messageHistory.slice(-MAX_HISTORY);
-        }
-
         const completion = await openai.chat.completions.create({
             messages: [
                 { role: "system", content: "You are a helpful assistant." },
-                ...messageHistory
+                ...latestMessageHistory
             ],
             model: MODEL_MAP[(model as keyof typeof MODEL_MAP)],
             stream: true
