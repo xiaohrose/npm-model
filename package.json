@@ -1,0 +1,29 @@
+{
+  "name": "ds-npm",
+  "version": "1.0.0",
+  "description": "A project for deepseek",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "deepseek",
+    "demo"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/deepseek-demo.git"
+  },
+  "bin": {
+    "mc": "./bin/mchat.js"
+  },
+  "dependencies": {
+    "openai": "^4.79.1"
+  }
+}
