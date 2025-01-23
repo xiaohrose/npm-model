@@ -1,3 +1,40 @@
+# 检查是否安装了node
+if ! command -v node &> /dev/null; then
+    echo "Node.js未安装，正在安装..."
+    
+    # 使用nvm安装node（如果nvm可用）
+    if command -v nvm &> /dev/null; then
+        nvm install --lts
+    else
+        # 如果没有nvm，使用系统包管理器
+        if command -v apt-get &> /dev/null; then
+            curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+        elif command -v yum &> /dev/null; then
+            curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo -E bash -
+            sudo yum install -y nodejs
+        elif command -v brew &> /dev/null; then
+            brew install node
+        else
+            echo "无法自动安装Node.js，请手动安装Node.js LTS版本"
+            exit 1
+        fi
+    fi
+    
+    echo "Node.js安装完成"
+else
+    echo "Node.js已安装"
+fi
+
+# 检查是否安装了mp-mc
+if ! npm list -g | grep -q "mp-mc"; then
+    echo "mp-mc未安装，正在安装..."
+    npm install -g mp-mc
+    echo "mp-mc安装完成"
+else
+    echo "mp-mc已安装"
+fi
+
 
 # 检查是否提供了API KEY
 if [ -n "$1" ]; then

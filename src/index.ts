@@ -129,14 +129,15 @@ export async function main() {
         let messageHistory = loadHistory();
 
         // 保持历史记录在最大长度限制内
-        const latestMessageHistory = messageHistory.slice(-MAX_HISTORY * 2);
+        const latestMessageHistory = MAX_HISTORY !== 1 ? messageHistory.slice(-(MAX_HISTORY * 2)) : [];
 
-        // 添加用户新消息到历史记录（添加时间戳）
-        latestMessageHistory.push({
-            role: 'user',
+        const userMessage: HistoryEntry = {
+            role: 'user' as const,
             content: params.join(' '),
             timestamp: Date.now()
-        });
+        }
+        // 添加用户新消息到历史记录（添加时间戳）
+        latestMessageHistory.push(userMessage);
 
         const completion = await openai.chat.completions.create({
             messages: [
@@ -153,7 +154,7 @@ export async function main() {
             content: '',
             timestamp: Date.now()
         };
-        messageHistory.push(assistantMessage);
+        messageHistory.push(userMessage, assistantMessage);
 
         // 修改handleStreamResponse来累积响应内容
         await handleStreamResponse(completion, (content: string) => {

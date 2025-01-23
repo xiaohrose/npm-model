@@ -13,10 +13,8 @@
             ],
             "program": "${workspaceFolder}/bin/mchat.js",
             "args": [
-                "-t",
-                "r",
                 "-n",
-                "2",
+                "6",
                 "test"
             ],
             "outFiles": [
