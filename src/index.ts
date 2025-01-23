@@ -14,8 +14,13 @@ const params = process.argv.slice(2);
 const modelIndex = params.indexOf('-t');
 let model = 'chat', MAX_HISTORY = 1;
 
+if (params.length === 0) {
+    console.error('no content');
+    process.exit(1);
+}
+
 if (!process.env.KEY) {
-    console.error('请设置KEY');
+    console.error('no KEY');
     process.exit(1);
 }
 
