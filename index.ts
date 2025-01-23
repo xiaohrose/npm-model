@@ -8,6 +8,7 @@ const MODEL_MAP = {
     'chat': 'deepseek-chat',
     'reasoner': 'deepseek-reasoner'
 }
+
 // 获取命令行参数
 const params = process.argv.slice(2);
 const modelIndex = params.indexOf('-t');
