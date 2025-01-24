@@ -36,12 +36,35 @@ else
 fi
 
 
-# 检查是否提供了API KEY
-if [ -n "$1" ]; then
-    # 将KEY添加到环境变量
-    if ! grep -q "export KEY=$1" ~/.bashrc; then
-        echo "export KEY=$1" >> ~/.bashrc
-        echo "API KEY已添加到环境变量"
+# 解析命令行参数
+KEY=""
+VALUE=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -k)
+            KEY="$2"
+            shift 2
+            ;;
+        -v)
+            VALUE="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# 如果只提供了VALUE，使用默认KEY
+if [ -n "$VALUE" ] && [ -z "$KEY" ]; then
+    KEY="KEY"
+fi
+
+# 如果KEY和VALUE都提供了，设置环境变量
+if [ -n "$KEY" ] && [ -n "$VALUE" ]; then
+    if ! grep -q "export $KEY=$VALUE" ~/.bashrc; then
+        echo "export $KEY=$VALUE" >> ~/.bashrc
+        echo "$KEY 已添加到环境变量"
     fi
     source ~/.bashrc
 fi

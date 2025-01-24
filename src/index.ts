@@ -1,13 +1,8 @@
 import { OpenAI } from "openai";
 import fs from 'fs';
 import path from 'path';
+import { MODEL_MAP } from './constants'
 
-const MODEL_MAP = {
-    'c': 'deepseek-chat',
-    'r': 'deepseek-reasoner',
-    'chat': 'deepseek-chat',
-    'reasoner': 'deepseek-reasoner'
-}
 
 // 获取命令行参数
 const params = process.argv.slice(2);
@@ -35,10 +30,12 @@ if (historyCountIndex >= 0) {
     params.splice(historyCountIndex, 2);
 }
 
+const currentModel = MODEL_MAP[model as keyof typeof MODEL_MAP];
+
 // 初始化 OpenAI 客户端
 const openai = new OpenAI({
-    baseURL: 'https://api.deepseek.com',
-    apiKey: process.env.KEY
+    baseURL: currentModel.baseURL,
+    apiKey: currentModel.key
 });
 
 // 确保目录存在
@@ -47,7 +44,7 @@ if (!fs.existsSync(path.join(__dirname, 'chats'))) {
 }
 
 // 将 HISTORY_FILE 的路径修改为相对于当前项目目录，并在文件名中加入模型信息
-const HISTORY_FILE = path.join(__dirname, 'chats', `${new Date().toISOString().split('T')[0]}_${MODEL_MAP[model as keyof typeof MODEL_MAP]}_chat_history.json`);
+const HISTORY_FILE = path.join(__dirname, 'chats', `${new Date().toISOString().split('T')[0]}_${currentModel.name}_chat_history.json`);
 
 // 添加接口定义
 interface HistoryEntry {
@@ -149,7 +146,7 @@ export async function main() {
                 { role: "system", content: "You are a helpful assistant." },
                 ...latestMessageHistory
             ],
-            model: MODEL_MAP[(model as keyof typeof MODEL_MAP)],
+            model: currentModel.name,
             stream: true
         });
 
