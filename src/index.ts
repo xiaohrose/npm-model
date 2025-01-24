@@ -3,7 +3,6 @@ import fs from 'fs';
 import path from 'path';
 import { MODEL_MAP } from './constants'
 
-
 // 获取命令行参数
 const params = process.argv.slice(2);
 const modelIndex = params.indexOf('-t');
