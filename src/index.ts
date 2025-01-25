@@ -144,7 +144,7 @@ export async function main() {
             messages: [
                 { role: "system", content: "You are a helpful assistant." },
                 ...latestMessageHistory
-            ],
+           ],
             model: currentModel.name,
             stream: true
         });
