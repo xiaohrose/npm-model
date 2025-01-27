@@ -1,7 +1,7 @@
 import { OpenAI } from "openai";
 import fs from 'fs';
 import path from 'path';
-import { MODEL_MAP } from './constants'
+import { getModelConfig } from './constants'
 
 // 获取命令行参数
 const params = process.argv.slice(2);
@@ -29,7 +29,7 @@ if (historyCountIndex >= 0) {
     params.splice(historyCountIndex, 2);
 }
 
-const currentModel = MODEL_MAP[model as keyof typeof MODEL_MAP];
+const currentModel = getModelConfig(model);
 
 // 初始化 OpenAI 客户端
 const openai = new OpenAI({
