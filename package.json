@@ -24,6 +24,8 @@
     "mc": "./bin/mchat.js"
   },
   "dependencies": {
+    "commader": "^1.0.0",
+    "commander": "^13.1.0",
     "openai": "^4.79.1"
   }
 }
