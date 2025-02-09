@@ -6,7 +6,7 @@ import { getModelConfig } from './constants'
 // 获取命令行参数
 const params = process.argv.slice(2);
 const modelIndex = params.indexOf('-t');
-let model = 'chat', MAX_HISTORY = 1;
+let model, MAX_HISTORY = 1;
 
 if (params.length === 0) {
     console.error('no content');
@@ -30,6 +30,12 @@ if (historyCountIndex >= 0) {
 }
 
 const currentModel = getModelConfig(model);
+
+if(!currentModel.key || !currentModel.baseURL) {
+
+    console.error('no model');
+    process.exit(1)
+}
 
 // 初始化 OpenAI 客户端
 const openai = new OpenAI({

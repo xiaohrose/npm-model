@@ -1,18 +1,19 @@
 {
   "name": "ds-npm",
   "version": "1.0.0",
-  "description": "A project for deepseek",
+  "description": "A project command search GPT",
+  "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc"
   },
   "keywords": [
-    "deepseek",
-    "demo"
+    "search with chat model for command"
   ],
   "author": "Your Name",
   "license": "MIT",
@@ -21,11 +22,14 @@
     "url": "git+https://github.com/yourusername/deepseek-demo.git"
   },
   "bin": {
-    "mc": "./bin/mchat.js"
+    "mcc": "./bin/mchat.js"
   },
   "dependencies": {
+    "@types/node": "^22.13.1",
     "commader": "^1.0.0",
     "commander": "^13.1.0",
-    "openai": "^4.79.1"
+    "openai": "^4.79.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }

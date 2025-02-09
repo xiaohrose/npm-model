@@ -1,12 +1,9 @@
-import {getConfigDefaultModel} from './util/index.js'
-
-interface ModelConfig {
-    name: string;
-    baseURL: string;
-    key: string | undefined;
-}
-
-export const MODEL_MAP = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MODEL_MAP = void 0;
+exports.getModelConfig = getModelConfig;
+const index_js_1 = require("./util/index.js");
+exports.MODEL_MAP = {
     'c': { name: 'deepseek-chat', baseURL: 'https://api.deepseek.com', key: process.env.KEY },
     'r': { name: 'deepseek-reasoner', baseURL: 'https://api.deepseek.com', key: process.env.KEY },
     'chat': { name: 'deepseek-chat', baseURL: 'https://api.deepseek.com', key: process.env.KEY },
@@ -21,29 +18,19 @@ export const MODEL_MAP = {
     'd3': {
         name: 'ep-20250208152704-tjht4', baseURL: 'https://ark.cn-beijing.volces.com/api/v3', key: process.env.CORDER_KEY
     }
-}
-
-export type TModelKey =keyof typeof MODEL_MAP; 
-
-
-export function getModelConfig(input?: string) :ModelConfig{
-
-    if (!input) return MODEL_MAP[getConfigDefaultModel() as TModelKey]
-
+};
+function getModelConfig(input) {
+    if (!input)
+        return exports.MODEL_MAP[(0, index_js_1.getConfigDefaultModel)()];
     // 首先尝试精确匹配
-    if (input in MODEL_MAP) {
-        return MODEL_MAP[input as TModelKey];
+    if (input in exports.MODEL_MAP) {
+        return exports.MODEL_MAP[input];
     }
-
     // 模糊匹配逻辑
-    const possibleKeys = Object.keys(MODEL_MAP).filter(key => 
-        key.startsWith(input.trim()) && key !== input
-    );
-
+    const possibleKeys = Object.keys(exports.MODEL_MAP).filter(key => key.startsWith(input.trim()) && key !== input);
     // 如果有且只有一个匹配项才返回
     if (possibleKeys.length === 1) {
-        return MODEL_MAP[possibleKeys[0] as TModelKey];
+        return exports.MODEL_MAP[possibleKeys[0]];
     }
-
-    return MODEL_MAP[getConfigDefaultModel() as TModelKey];
+    return exports.MODEL_MAP[(0, index_js_1.getConfigDefaultModel)()];
 }
