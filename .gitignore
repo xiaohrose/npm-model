@@ -2,3 +2,8 @@
 /chats
 /__tests__
 /src/chats
+/dist
+./uninstall.sh
+./install.sh
+./up.sh
+./update.sh

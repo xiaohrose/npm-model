@@ -1,32 +1,26 @@
-import {getConfigDefaultModel} from './util/index.js'
+import {getConfigDefaultModel, getConfigModels} from './util'
+import {IModelConfig, TModelKey} from '@/types'
 
-interface ModelConfig {
-    name: string;
-    baseURL: string;
-    key: string | undefined;
-}
+// export const MODEL_MAP = {
+//     'c': { model: 'deepseek-chat', baseURL: 'https://api.deepseek.com', key: "KEY" },
+//     'r': { model: 'deepseek-reasoner', baseURL: 'https://api.deepseek.com', key: "KEY" },
+//     'chat': { model: 'deepseek-chat', baseURL: 'https://api.deepseek.com', key: "KEY" },
+//     'reasoner': { model: 'deepseek-reasoner', baseURL: 'https://api.deepseek.com', key: "KEY" },
+//     'dou': { model: 'ep-20250124104505-6tsdw', baseURL: 'https://ark.cn-beijing.volces.com/api/v3/', key: "DOU_KEY" },
+//     'd': { model: 'ep-20250124104505-6tsdw', baseURL: 'https://ark.cn-beijing.volces.com/api/v3/', key: "DOU_KEY" },
+//     't': { model: 'hunyuan-turbo', baseURL: 'https://api.hunyuan.cloud.tencent.com/v1', key: "TENCENT_KEY" },
+//     'tencent': { model: 'hunyuan-turbo', baseURL: 'https://api.hunyuan.cloud.tencent.com/v1', key: "TENCENT_KEY" },
+//     'dr': {
+//         model: 'ep-20250208152602-g7tx9', baseURL: 'https://ark.cn-beijing.volces.com/api/v3', key: "CORDER_KEY"
+//     },
+//     'd3': {
+//         model: 'ep-20250208152704-tjht4', baseURL: 'https://ark.cn-beijing.volces.com/api/v3', key: "CORDER_KEY"
+//     }
+// }
 
-export const MODEL_MAP = {
-    'c': { name: 'deepseek-chat', baseURL: 'https://api.deepseek.com', key: process.env.KEY },
-    'r': { name: 'deepseek-reasoner', baseURL: 'https://api.deepseek.com', key: process.env.KEY },
-    'chat': { name: 'deepseek-chat', baseURL: 'https://api.deepseek.com', key: process.env.KEY },
-    'reasoner': { name: 'deepseek-reasoner', baseURL: 'https://api.deepseek.com', key: process.env.KEY },
-    'dou': { name: 'ep-20250124104505-6tsdw', baseURL: 'https://ark.cn-beijing.volces.com/api/v3/', key: process.env.DOU_KEY },
-    'd': { name: 'ep-20250124104505-6tsdw', baseURL: 'https://ark.cn-beijing.volces.com/api/v3/', key: process.env.DOU_KEY },
-    't': { name: 'hunyuan-turbo', baseURL: 'https://api.hunyuan.cloud.tencent.com/v1', key: process.env.TENCENT_KEY },
-    'tencent': { name: 'hunyuan-turbo', baseURL: 'https://api.hunyuan.cloud.tencent.com/v1', key: process.env.TENCENT_KEY },
-    'dr': {
-        name: 'ep-20250208152602-g7tx9', baseURL: 'https://ark.cn-beijing.volces.com/api/v3', key: process.env.CORDER_KEY
-    },
-    'd3': {
-        name: 'ep-20250208152704-tjht4', baseURL: 'https://ark.cn-beijing.volces.com/api/v3', key: process.env.CORDER_KEY
-    }
-}
+export const MODEL_MAP = getConfigModels();
 
-export type TModelKey =keyof typeof MODEL_MAP; 
-
-
-export function getModelConfig(input?: string) :ModelConfig{
+export function getModelConfig(input?: string) :IModelConfig{
 
     if (!input) return MODEL_MAP[getConfigDefaultModel() as TModelKey]
 

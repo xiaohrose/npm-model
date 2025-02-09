@@ -1,178 +1,91 @@
-import { OpenAI } from "openai";
-import fs from 'fs';
+import { spawn } from 'child_process';
 import path from 'path';
-import { getModelConfig } from './constants'
+import { setConfigDefaultModel,getCurrentModelName, setBinCommandName } from './util';
+import { program } from 'commander';
+import { MODEL_MAP} from './constants';
+import {TModelKey } from '@/types'
+import {isProd} from '@/util/env'
 
-// 获取命令行参数
-const params = process.argv.slice(2);
-const modelIndex = params.indexOf('-t');
-let model, MAX_HISTORY = 1;
-
-if (params.length === 0) {
-    console.error('no content');
-    process.exit(1);
+interface ChatOptions {
+  type?: string;
+  history?: string;
 }
 
-if (!process.env.KEY) {
-    console.error('no KEY');
-    process.exit(1);
-}
+// 设置基本命令和版本
+program
+  .name('mchat')
+  .version('1.0.0')
+  .description('AI Chat CLI Tool');
 
-if (modelIndex >= 0) {
-    model = params[modelIndex + 1];
-    params.splice(modelIndex, 2);
-}
-const historyCountIndex = params.indexOf('-n');
-
-if (historyCountIndex >= 0) {
-    MAX_HISTORY = parseInt(params[historyCountIndex + 1]);
-    params.splice(historyCountIndex, 2);
-}
-
-const currentModel = getModelConfig(model);
-
-if(!currentModel.key || !currentModel.baseURL) {
-
-    console.error('no model');
-    process.exit(1)
-}
-
-// 初始化 OpenAI 客户端
-const openai = new OpenAI({
-    baseURL: currentModel.baseURL,
-    apiKey: currentModel.key
-});
-
-// 确保目录存在
-if (!fs.existsSync(path.join(__dirname, 'chats'))) {
-    fs.mkdirSync(path.join(__dirname, 'chats'), { recursive: true });
-}
-
-// 将 HISTORY_FILE 的路径修改为相对于当前项目目录，并在文件名中加入模型信息
-const HISTORY_FILE = path.join(__dirname, 'chats', `${new Date().toISOString().split('T')[0]}_${currentModel.name}_chat_history.json`);
-
-// 添加接口定义
-interface HistoryEntry {
-    role: 'system' | 'user' | 'assistant';
-    content: string;
-    name?: string;
-    timestamp?: number;
-}
-
-// 读取历史记录
-export function loadHistory(): HistoryEntry[] {
-    try {
-        if (!fs.existsSync(HISTORY_FILE)) {
-            // 如果文件不存在，创建空数组并保存
-            saveHistory([]);
-            return [];
-        }
-
-        const data = fs.readFileSync(HISTORY_FILE, 'utf8');
-        let history: HistoryEntry[] = [];
-        try {
-            history = JSON.parse(data) as HistoryEntry[];
-        } catch (error) {
-            console.error('Error parsing history:', error);
-        }
-        return history;
-    } catch (error) {
-        console.error('Error loading history:', error);
+// 添加默认命令（聊天模式）
+program
+  .argument('[content...]', 'The content to chat with')
+  .option('-t, --type <type>', 'Specify model type (chat/reasoner)')
+  .option('-n, --history <number>', 'Number of history messages to keep', '1')
+  .description('Start chat mode (default command)')
+  .action((content: string[], options: ChatOptions) => {
+    const args: string[] = [];
+    if (content) {
+      args.push(...content);
     }
-    return [];
-}
-
-// 保存历史记录
-export function saveHistory(history: OpenAI.Chat.ChatCompletionMessageParam[]) {
-    try {
-        fs.writeFileSync(HISTORY_FILE, JSON.stringify(history, null, 2));
-    } catch (error) {
-        console.error('Error saving history:', error);
+    if (options.type) {
+      args.push('-t', options.type);
     }
-}
-
-// 定义消息处理函数
-export async function handleStreamResponse(completion: any, callback: (content: string) => void) {
-    let isHeader = true;
-    try {
-        for await (const chunk of completion.iterator()) {
-            // 检查是否中止
-            if (completion.controller.signal.aborted) {
-                console.log('Stream processing aborted!');
-                return;
-            }
-
-            const content = chunk.choices[0]?.delta?.content;
-
-            // 处理头部换行
-            if (isHeader) {
-                if (content !== '\n') {
-                    isHeader = false;
-                    process.stdout.write('\n');
-                }
-                continue;
-            }
-
-            // 处理内容输出
-            if (content) {
-                process.stdout.write(content);
-                callback(content);
-            }
-
-            // 处理结束标记
-            if (chunk.choices[0]?.finish_reason === 'stop') {
-                process.stdout.write('\n');
-                break; // 明确结束循环
-            }
-        }
-    } catch (error) {
-        console.error('Error processing stream:', error);
+    if (options.history) {
+      args.push('-n', options.history);
     }
-}
 
-export async function main() {
-    try {
-        // 加载历史记录
-        let messageHistory = loadHistory();
+    const command = isProd ? 'node': 'ts-node';
+    spawn(command, [path.join(__dirname, `./main.${isProd ? 'j': 't'}s`), ...args], {
+      stdio: 'inherit',
+      shell: true
+    });
+  });
 
-        // 保持历史记录在最大长度限制内
-        const latestMessageHistory = MAX_HISTORY !== 1 ? messageHistory.slice(-(MAX_HISTORY * 2)) : [];
-
-        const userMessage: HistoryEntry = {
-            role: 'user' as const,
-            content: params.join(' '),
-            timestamp: Date.now()
-        }
-        // 添加用户新消息到历史记录（添加时间戳）
-        latestMessageHistory.push(userMessage);
-
-        const completion = await openai.chat.completions.create({
-            messages: [
-                { role: "system", content: "You are a helpful assistant." },
-                ...latestMessageHistory
-           ],
-            model: currentModel.name,
-            stream: true
-        });
-
-        // 保存助手的回复到历史记录（添加时间戳）
-        const assistantMessage: HistoryEntry = {
-            role: 'assistant' as const,
-            content: '',
-            timestamp: Date.now()
-        };
-        messageHistory.push(userMessage, assistantMessage);
-
-        // 修改handleStreamResponse来累积响应内容
-        await handleStreamResponse(completion, (content: string) => {
-            assistantMessage.content += content;
-        });
-
-        // 保存更新后的历史记录
-        saveHistory(messageHistory);
-    } catch (error) {
-        console.error('Error in main:', error);
+// 添加模型配置命令
+program
+  .command('set-model <model>')
+  .description('Set default model type')
+  .action((model: string) => {
+    const validModels = Object.keys(MODEL_MAP);
+    
+    if (validModels.includes(model)) {
+      setConfigDefaultModel(model as TModelKey);
+      console.log(`Default model set to: ${model}`);
+    } else {
+      console.error(`Invalid model type. Valid options are: ${validModels.join(', ')}`);
     }
-}
+  });
 
-main();
+program
+  .command('show model')
+  .description('Show current default model name')
+  .action(() => {
+    const modelName = getCurrentModelName();
+    console.log(`Current default model: ${modelName}`);
+  });
+
+// 添加其他命令示例
+program
+  .command('config')
+  .description('Configure settings')
+  .action(() => {
+    console.log('Config command triggered');
+    // 这里可以添加配置相关逻辑
+  });
+
+program
+  .command('rename <newName>')
+  .description('Change the command name')
+  .action((newName: string) => {
+    console.log(`Command name changed to: ${newName}`);
+    setBinCommandName(newName);
+  });
+
+// 解析命令行参数
+program.parse(process.argv);
+
+// 如果没有提供任何命令，显示帮助信息
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}

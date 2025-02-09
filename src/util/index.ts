@@ -1,12 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { TModelKey } from '../constants.js';
+import {IModelConfig, TModelKey} from '@/types'
 
-// 使用 CommonJS 的 __dirname 替代方案
-// const locale_dirname = path.dirname(__filename);
 
 interface Config {
     default: TModelKey;
+    models: Record<TModelKey, IModelConfig>
 }
 
 interface PackageJson {
@@ -16,7 +15,7 @@ interface PackageJson {
 
 const getConfigPath = (): string => path.join(__dirname, '../../config.json');
 
-export function getConfigDefaultModel(): TModelKey {
+export function getConfigDefaultModel(): string {
     try {
         const config: Config = JSON.parse(fs.readFileSync(getConfigPath(), 'utf8'));
         return config.default;
@@ -29,12 +28,8 @@ export function getConfigDefaultModel(): TModelKey {
 export function setConfigDefaultModel(model: TModelKey): void {
     const configPath = getConfigPath();
     try {
-        // 读取现有配置
-        let config: Config = { default: 'chat' };
-        if (fs.existsSync(configPath)) {
-            const data = fs.readFileSync(configPath, 'utf8');
-            config = JSON.parse(data);
-        }
+        const data = fs.readFileSync(configPath, 'utf8');
+        let config = JSON.parse(data);
 
         // 更新default字段
         config.default = model;
@@ -43,6 +38,16 @@ export function setConfigDefaultModel(model: TModelKey): void {
         fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
     } catch (error) {
         console.error('Error updating config file:', error);
+    }
+}
+
+export function getCurrentModelName(): string {
+    try {
+        const config: Config = JSON.parse(fs.readFileSync(getConfigPath(), 'utf8'));
+        return config.default;
+    } catch (error) {
+        console.error('Error reading config file:', error);
+        return 'chat';
     }
 }
 
@@ -79,8 +84,36 @@ export function setBinCommandName(newName: string): boolean {
     }
 }
 
+export function getConfigModels(): Record<TModelKey, IModelConfig> {
+    try {
+        const config: Config = JSON.parse(fs.readFileSync(getConfigPath(), 'utf8'));
+        if (config.models) {
+            return config.models;
+        }
+        return {} as Record<TModelKey, IModelConfig>;
+    } catch (error) {
+        console.error('Error reading config models:', error);
+        return {} as Record<TModelKey, IModelConfig>;
+    }
+}
+
+export function setConfigModels(name: TModelKey, models: IModelConfig): boolean {
+    try {
+        const configPath = getConfigPath();
+        const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+        config.models[name] = models;
+        fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+        return true;
+    } catch (error) {
+        console.error('Error updating config models:', error);
+        return false;
+    }
+}
+
 export default {
     getConfigDefaultModel,
     setConfigDefaultModel,
-    setBinCommandName
+    setBinCommandName,
+    getCurrentModelName
 };
