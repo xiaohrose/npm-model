@@ -1,12 +1,13 @@
 import { OpenAI } from "openai";
 import fs from 'fs';
 import path from 'path';
-import { getModelConfig } from './constants'
+import { getModelConfig } from './constants';
+import { omit } from 'lodash'
 
 // 获取命令行参数
 const params = process.argv.slice(2);
 const modelIndex = params.indexOf('-t');
-let model, MAX_HISTORY = 1;
+let model, MAX_HISTORY = 0;
 
 if (params.length === 0) {
     console.error('no content');
@@ -56,6 +57,7 @@ interface HistoryEntry {
     content: string;
     name?: string;
     timestamp?: number;
+    reasoning_content?: string;
 }
 
 // 读取历史记录
@@ -91,7 +93,7 @@ export function saveHistory(history: OpenAI.Chat.ChatCompletionMessageParam[]) {
 }
 
 // 定义消息处理函数
-export async function handleStreamResponse(completion: any, callback: (content: string) => void) {
+export async function handleStreamResponse(completion: any, callback: (data: { content: string; reasoning_content: string }) => void) {
     let isHeader = true;
     try {
         for await (const chunk of completion.iterator()) {
@@ -115,7 +117,7 @@ export async function handleStreamResponse(completion: any, callback: (content: 
             // 处理内容输出
             if (content || reasoning_content) {
                 process.stdout.write(content || reasoning_content);
-                callback(content || reasoning_content);
+                callback({ content, reasoning_content });
             }
 
             // 处理结束标记
@@ -135,7 +137,7 @@ export async function main() {
         let messageHistory = loadHistory();
 
         // 保持历史记录在最大长度限制内
-        const latestMessageHistory = MAX_HISTORY !== 1 ? messageHistory.slice(-(MAX_HISTORY * 2)) : [];
+        let latestMessageHistory = MAX_HISTORY ? messageHistory.slice(-(MAX_HISTORY * 2)) : [];
 
         const userMessage: HistoryEntry = {
             role: 'user' as const,
@@ -144,6 +146,8 @@ export async function main() {
         }
         // 添加用户新消息到历史记录（添加时间戳）
         latestMessageHistory.push(userMessage);
+
+        latestMessageHistory = latestMessageHistory.map(item => omit(item, ['reasoning_content', 'timestamp']));
 
         const completion = await openai.chat.completions.create({
             messages: [
@@ -163,8 +167,9 @@ export async function main() {
         messageHistory.push(userMessage, assistantMessage);
 
         // 修改handleStreamResponse来累积响应内容
-        await handleStreamResponse(completion, (content: string) => {
-            assistantMessage.content += content;
+        await handleStreamResponse(completion, (data: { content?: string; reasoning_content?: string }) => {
+            data.content && (assistantMessage.content += data.content);
+            data.reasoning_content && (assistantMessage.reasoning_content += data.reasoning_content)
         });
 
         // 保存更新后的历史记录

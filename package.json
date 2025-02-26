@@ -28,8 +28,12 @@
     "@types/node": "^22.13.1",
     "commader": "^1.0.0",
     "commander": "^13.1.0",
+    "lodash": "^4.17.21",
     "openai": "^4.79.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.15"
   }
 }
