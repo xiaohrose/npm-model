@@ -31,7 +31,7 @@ if (historyCountIndex >= 0) {
 
 const currentModel = getModelConfig(model);
 
-if(!currentModel.key || !currentModel.url) {
+if (!currentModel.key || !currentModel.url) {
     console.error('no model');
     process.exit(1)
 }
@@ -149,7 +149,7 @@ export async function main() {
             messages: [
                 { role: "system", content: "You are a helpful assistant." },
                 ...latestMessageHistory
-           ],
+            ],
             model: currentModel.model,
             stream: true
         });

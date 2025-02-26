@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "jest",
-    "build": "tsc --NODE_ENV=production"
+    "build": "NODE_ENV=production tsc"
   },
   "keywords": [
     "search with chat model for command"

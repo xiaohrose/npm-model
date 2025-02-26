@@ -1,10 +1,10 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { setConfigDefaultModel,getCurrentModelName, setBinCommandName } from './util';
+import { setConfigDefaultModel, getCurrentModelName, setBinCommandName } from './util';
 import { program } from 'commander';
-import { MODEL_MAP} from './constants';
-import {TModelKey } from '@/types'
-import {isProd} from '@/util/env'
+import { MODEL_MAP } from './constants';
+import { TModelKey } from './types';
+import { isProd } from './util/env'
 
 interface ChatOptions {
   type?: string;
@@ -35,8 +35,9 @@ program
       args.push('-n', options.history);
     }
 
-    const command = isProd ? 'node': 'ts-node';
-    spawn(command, [path.join(__dirname, `./main.${isProd ? 'j': 't'}s`), ...args], {
+    const command = isProd ? 'node' : 'ts-node';
+    const mainPath = isProd ? path.join(__dirname, 'main.js') : path.join(__dirname, '..', 'src', 'main.ts');
+    spawn(command, [mainPath, ...args], {
       stdio: 'inherit',
       shell: true
     });
@@ -48,7 +49,7 @@ program
   .description('Set default model type')
   .action((model: string) => {
     const validModels = Object.keys(MODEL_MAP);
-    
+
     if (validModels.includes(model)) {
       setConfigDefaultModel(model as TModelKey);
       console.log(`Default model set to: ${model}`);

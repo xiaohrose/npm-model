@@ -1,4 +1,55 @@
 {
   "default": "c",
-  "models": {"c":{"model":"deepseek-chat","url":"https://api.deepseek.com","key":"KEY"},"r":{"model":"deepseek-reasoner","url":"https://api.deepseek.com","key":"KEY"},"chat":{"model":"deepseek-chat","url":"https://api.deepseek.com","key":"KEY"},"reasoner":{"model":"deepseek-reasoner","url":"https://api.deepseek.com","key":"KEY"},"dou":{"model":"ep-20250124104505-6tsdw","url":"https://ark.cn-beijing.volces.com/api/v3/","key":"DOU_KEY"},"d":{"model":"ep-20250124104505-6tsdw","url":"https://ark.cn-beijing.volces.com/api/v3/","key":"DOU_KEY"},"t":{"model":"hunyuan-turbo","url":"https://api.hunyuan.cloud.tencent.com/v1","key":"TENCENT_KEY"},"tencent":{"model":"hunyuan-turbo","url":"https://api.hunyuan.cloud.tencent.com/v1","key":"TENCENT_KEY"},"dr":{"model":"ep-20250208152602-g7tx9","url":"https://ark.cn-beijing.volces.com/api/v3","key":"CORDER_KEY"},"d3":{"model":"ep-20250208152704-tjht4","url":"https://ark.cn-beijing.volces.com/api/v3","key":"CORDER_KEY"}}
+  "models": {
+    "c": {
+      "model": "deepseek-chat",
+      "url": "https://api.deepseek.com",
+      "key": "KEY"
+    },
+    "r": {
+      "model": "deepseek-reasoner",
+      "url": "https://api.deepseek.com",
+      "key": "KEY"
+    },
+    "chat": {
+      "model": "deepseek-chat",
+      "url": "https://api.deepseek.com",
+      "key": "KEY"
+    },
+    "reasoner": {
+      "model": "deepseek-reasoner",
+      "url": "https://api.deepseek.com",
+      "key": "KEY"
+    },
+    "dou": {
+      "model": "ep-20250124104505-6tsdw",
+      "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
+    "d": {
+      "model": "ep-20250124104505-6tsdw",
+      "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
+    "t": {
+      "model": "hunyuan-turbo",
+      "url": "https://api.hunyuan.cloud.tencent.com/v1",
+      "key": "TENCENT_KEY"
+    },
+    "tencent": {
+      "model": "hunyuan-turbo",
+      "url": "https://api.hunyuan.cloud.tencent.com/v1",
+      "key": "TENCENT_KEY"
+    },
+    "qm": {
+      "model": "qwen-plus",
+      "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "key": "QIAN_WEN"
+    },
+    "qo": {
+      "model": "qwen-omni-turbo",
+      "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "key": "QIAN_WEN"
+    }
+  }
 }
