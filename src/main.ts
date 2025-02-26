@@ -102,7 +102,7 @@ export async function handleStreamResponse(completion: any, callback: (content: 
             }
 
             const content = chunk.choices[0]?.delta?.content;
-
+            const reasoning_content = chunk.choices[0]?.delta?.reasoning_content;
             // 处理头部换行
             if (isHeader) {
                 if (content !== '\n') {
@@ -112,9 +112,10 @@ export async function handleStreamResponse(completion: any, callback: (content: 
                 continue;
             }
 
+
             // 处理内容输出
-            if (content) {
-                process.stdout.write(content);
+            if (content || reasoning_content) {
+                process.stdout.write(content || reasoning_content);
                 callback(content);
             }
 
