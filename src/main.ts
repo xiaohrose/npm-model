@@ -112,11 +112,10 @@ export async function handleStreamResponse(completion: any, callback: (content: 
                 continue;
             }
 
-
             // 处理内容输出
             if (content || reasoning_content) {
                 process.stdout.write(content || reasoning_content);
-                callback(content);
+                callback(content || reasoning_content);
             }
 
             // 处理结束标记
