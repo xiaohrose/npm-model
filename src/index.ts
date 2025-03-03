@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { setConfigDefaultModel, getCurrentModelName, setBinCommandName } from './util';
+import { setConfigDefaultModel, runServerShell, getCurrentModelName, setBinCommandName } from './util';
 import { program } from 'commander';
 import { MODEL_MAP } from './constants';
 import { TModelKey } from './types';
@@ -59,7 +59,7 @@ program
   });
 
 program
-  .command('show model')
+  .command('show')
   .description('Show current default model name')
   .action(() => {
     const modelName = getCurrentModelName();
@@ -81,6 +81,14 @@ program
   .action((newName: string) => {
     console.log(`Command name changed to: ${newName}`);
     setBinCommandName(newName);
+  });
+
+program
+  .command('start-client')
+  .description('Start both server and client applications')
+  .action((options) => {
+    console.log(`Starting client and server on ${options.host}:${options.port}`);
+    runServerShell();
   });
 
 // 解析命令行参数

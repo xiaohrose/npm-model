@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import {IModelConfig, TModelKey} from '@/types'
+import { spawn } from 'node:child_process'
+import { IModelConfig, TModelKey } from '@/types'
 
 
 interface Config {
@@ -56,7 +57,7 @@ export function setBinCommandName(newName: string): boolean {
     try {
         // 读取package.json
         const packageJson: PackageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-        
+
         // 检查bin字段是否存在
         if (!packageJson.bin) {
             throw new Error('No bin field found in package.json');
@@ -75,7 +76,7 @@ export function setBinCommandName(newName: string): boolean {
 
         // 写入更新后的package.json
         fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-        
+
         console.log(`Command name changed from '${currentCommand}' to '${newName}'`);
         return true;
     } catch (error) {
@@ -117,3 +118,24 @@ export default {
     setBinCommandName,
     getCurrentModelName
 };
+
+export function runServerShell(): void {
+    try {
+        const shellPath = path.join(__dirname, '..', '..', 'shells', 'server.sh');
+        if (!fs.existsSync(shellPath)) {
+            throw new Error('server.sh not found');
+        }
+
+        const child = spawn('sh', [shellPath], {
+            stdio: 'inherit',
+            shell: true,
+            detached: true
+        });
+
+        child.unref();
+
+        console.log('Server started successfully');
+    } catch (error) {
+        console.error('Error running server shell:', error);
+    }
+}

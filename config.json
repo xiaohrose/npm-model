@@ -1,5 +1,5 @@
 {
-  "default": "c",
+  "default": "chat",
   "models": {
     "c": {
       "model": "deepseek-chat",
@@ -22,7 +22,7 @@
       "key": "KEY"
     },
     "dou": {
-      "model": "ep-20250124104505-6tsdw",
+      "model": "doubao-1-5-pro-32k-250115",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
     },
