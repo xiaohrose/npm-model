@@ -139,3 +139,53 @@ export function runServerShell(): void {
         console.error('Error running server shell:', error);
     }
 }
+
+
+export function readChats(): Array<{ name: string; date: string; title: string }> {
+    const chatDir = path.join(__dirname, '../chats');
+
+    const chatFiles = fs.readdirSync(chatDir).filter(file => file.endsWith('.json')).reverse();
+
+    const chatDetails: Array<{ name: string; date: string; title: string }> = [];
+
+    for (const file of chatFiles) {
+        try {
+            const fileNameParts = file.replace('.json', '').split('_');
+            const date = fileNameParts[0];
+            const modelName = fileNameParts[1];
+
+            chatDetails.push({ name: modelName, date, title: file });
+        } catch (error: any) {
+            console.error(`Error parsing chat file ${file}:`, error.message);
+        }
+    }
+
+    return chatDetails;
+}
+
+
+export function readChatDataByFile(file: string): Array<{ role: 'user' | 'assistant'; timestamp: number; content: string }> {
+    const chatFilePath = path.join(__dirname, `../chats/${file}`);
+    try {
+        if (fs.existsSync(chatFilePath)) {
+            const data = fs.readFileSync(chatFilePath, 'utf8');
+            const parsedData = JSON.parse(data) as Array<{ role: 'user' | 'assistant'; timestamp: number; content: string }>;
+
+            // Validate the structure of each entry to ensure it matches the expected format
+            const validatedData = parsedData.filter((entry) =>
+                typeof entry.role === 'string' &&
+                ['user', 'assistant'].includes(entry.role) &&
+                typeof entry.timestamp === 'number' &&
+                typeof entry.content === 'string'
+            );
+
+            return validatedData;
+        } else {
+            console.error(`File not found: ${chatFilePath}`);
+            return [];
+        }
+    } catch (error: any) {
+        console.error(`Error reading chat file ${file}:`, error.message);
+        return [];
+    }
+}

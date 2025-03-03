@@ -6,7 +6,7 @@ if ! command -v ts-node &> /dev/null; then
 fi
 
 (
-  cd "$(dirname "$0")" && ts-node ./src/server.ts || exit 1
+  cd "$(dirname "$0")" && ts-node ../src/server.ts || exit 1
 ) &
 
 (
