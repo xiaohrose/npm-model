@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { getModelConfig } from './constants';
 import { omit } from 'lodash'
+import { IModelConfig } from '@/types'
 
 // 获取命令行参数
 const params = process.argv.slice(2);
@@ -93,7 +94,7 @@ export function saveHistory(history: OpenAI.Chat.ChatCompletionMessageParam[]) {
 }
 
 // 定义消息处理函数
-export async function handleStreamResponse(completion: any, callback: (data: { content: string; reasoning_content: string }) => void) {
+export async function handleStreamResponse(completion: any, callback: (data: { content: string; reasoning_content: string }) => void, model: IModelConfig) {
     let isHeader = true;
     try {
         for await (const chunk of completion.iterator()) {
@@ -122,7 +123,7 @@ export async function handleStreamResponse(completion: any, callback: (data: { c
 
             // 处理结束标记
             if (chunk.choices[0]?.finish_reason === 'stop') {
-                process.stdout.write('\n');
+                process.stdout.write('\n' + model.model + '\n');
                 break; // 明确结束循环
             }
         }
@@ -170,7 +171,7 @@ export async function main() {
         await handleStreamResponse(completion, (data: { content?: string; reasoning_content?: string }) => {
             data.content && (assistantMessage.content += data.content);
             data.reasoning_content && (assistantMessage.reasoning_content += data.reasoning_content)
-        });
+        }, currentModel);
 
         // 保存更新后的历史记录
         saveHistory(messageHistory);

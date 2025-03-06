@@ -26,6 +26,11 @@
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
     },
+    "dou-pro": {
+      "model": "doubao-1-5-pro-256k-250115",
+       "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
     "d": {
       "model": "ep-20250124104505-6tsdw",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
@@ -48,6 +53,11 @@
     },
     "qo": {
       "model": "qwen-omni-turbo",
+      "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "key": "QIAN_WEN"
+    },
+    "qwq": {
+      "model": "qwq-32b",
       "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "key": "QIAN_WEN"
     }
