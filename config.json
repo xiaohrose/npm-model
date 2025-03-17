@@ -1,5 +1,5 @@
 {
-  "default": "chat",
+  "default": "qwq",
   "models": {
     "c": {
       "model": "deepseek-chat",
@@ -57,7 +57,7 @@
       "key": "QIAN_WEN"
     },
     "qwq": {
-      "model": "qwq-32b",
+      "model": "qwq-plus",
       "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "key": "QIAN_WEN"
     }

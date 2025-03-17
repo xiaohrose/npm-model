@@ -123,7 +123,7 @@ export async function handleStreamResponse(completion: any, callback: (data: { c
 
             // 处理结束标记
             if (chunk.choices[0]?.finish_reason === 'stop') {
-                process.stdout.write('\n' + model.model + '\n');
+                process.stdout.write('\n' + model.model + ' 😛\n');
                 break; // 明确结束循环
             }
         }

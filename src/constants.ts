@@ -3,6 +3,7 @@ import { IModelConfig, TModelKey } from '@/types'
 
 export const MODEL_MAP = getConfigModels();
 export function getModelConfig(input?: string): IModelConfig {
+console.log(input,MODEL_MAP, 'input');
 
     if (!input) return MODEL_MAP[getConfigDefaultModel() as TModelKey]
 
