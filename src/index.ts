@@ -1,9 +1,7 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { setConfigDefaultModel, runServerShell, getCurrentModelName, getConfigModels } from './util';
+import { runServerShell, getCurrentModelName, getConfigModels } from './util';
 import { program } from 'commander';
-import { MODEL_MAP } from './constants';
-import { TModelKey } from './types';
 import { isProd } from './util/env'
 
 interface ChatOptions {
@@ -49,21 +47,6 @@ program
     });
   });
 
-// 添加模型配置命令
-program
-  .command('set-model <model>')
-  .description('Set default model type')
-  .action((model: string) => {
-    const validModels = Object.keys(MODEL_MAP);
-
-    if (validModels.includes(model)) {
-      setConfigDefaultModel(model as TModelKey);
-      console.log(`Default model set to: ${model}`);
-    } else {
-      console.error(`Invalid model type. Valid options are: ${validModels.join(', ')}`);
-    }
-  });
-
 program
   .command('show')
   .description('Show current default model name')
@@ -82,7 +65,7 @@ program
   });
 
 program
-  .command('start-client')
+  .command('start')
   .description('Start both server and client applications')
   .action((options) => {
     console.log(`Starting client and server on ${options.host}:${options.port}`);
