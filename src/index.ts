@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { setConfigDefaultModel, runServerShell, getCurrentModelName, setBinCommandName } from './util';
+import { setConfigDefaultModel, runServerShell, getCurrentModelName, getConfigModels } from './util';
 import { program } from 'commander';
 import { MODEL_MAP } from './constants';
 import { TModelKey } from './types';
@@ -24,6 +24,12 @@ program
   .option('-n, --history <number>', 'Number of history messages to keep', '1')
   .description('Start chat mode (default command)')
   .action((content: string[], options: ChatOptions) => {
+    // 如果没有提供任何内容，显示帮助信息
+    if (!content.length) {
+      program.outputHelp();
+      return;
+    }
+
     const args: string[] = [];
     if (content) {
       args.push(...content);
@@ -72,15 +78,7 @@ program
   .description('Configure settings')
   .action(() => {
     console.log('Config command triggered');
-    // 这里可以添加配置相关逻辑
-  });
-
-program
-  .command('rename <newName>')
-  .description('Change the command name')
-  .action((newName: string) => {
-    console.log(`Command name changed to: ${newName}`);
-    setBinCommandName(newName);
+    // TODO 这里可以添加配置相关逻辑
   });
 
 program
@@ -89,6 +87,21 @@ program
   .action((options) => {
     console.log(`Starting client and server on ${options.host}:${options.port}`);
     runServerShell();
+  });
+
+// mc list， 展示config中模型
+program
+  .command('list')
+  .description('List all available models and their configurations')
+  .action(() => {
+    const models = getConfigModels();
+    const tableData = Object.entries(models).map(([key, config]) => ({
+      Key: key,
+      Model: config.model
+    }));
+
+    console.log('\nAvailable Models:');
+    console.table(tableData);
   });
 
 // 解析命令行参数

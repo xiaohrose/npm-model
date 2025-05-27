@@ -52,39 +52,6 @@ export function getCurrentModelName(): string {
     }
 }
 
-export function setBinCommandName(newName: string): boolean {
-    const packageJsonPath = path.join(__dirname, '../../package.json');
-    try {
-        // 读取package.json
-        const packageJson: PackageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-
-        // 检查bin字段是否存在
-        if (!packageJson.bin) {
-            throw new Error('No bin field found in package.json');
-        }
-
-        // 获取当前命令名称
-        const currentCommand = Object.keys(packageJson.bin)[0];
-        if (!currentCommand) {
-            throw new Error('No command found in bin field');
-        }
-
-        // 更新bin字段
-        const commandPath = packageJson.bin[currentCommand];
-        delete packageJson.bin[currentCommand];
-        packageJson.bin[newName] = commandPath;
-
-        // 写入更新后的package.json
-        fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-
-        console.log(`Command name changed from '${currentCommand}' to '${newName}'`);
-        return true;
-    } catch (error) {
-        console.error('Error updating package.json:', error);
-        return false;
-    }
-}
-
 export function getConfigModels(): Record<TModelKey, IModelConfig> {
     try {
         const config: Config = JSON.parse(fs.readFileSync(getConfigPath(), 'utf8'));
@@ -115,7 +82,6 @@ export function setConfigModels(name: TModelKey, models: IModelConfig): boolean 
 export default {
     getConfigDefaultModel,
     setConfigDefaultModel,
-    setBinCommandName,
     getCurrentModelName
 };
 
