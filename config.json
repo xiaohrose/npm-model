@@ -26,6 +26,11 @@
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
     },
+    "dou-dr1": {
+      "model": "deepseek-r1-250120",
+      "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
     "dou-pro": {
       "model": "doubao-1-5-pro-256k-250115",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
