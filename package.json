@@ -1,6 +1,6 @@
 {
   "name": "mc-mp",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A project command search GPT",
   "type": "commonjs",
   "main": "dist/index.js",
@@ -37,6 +37,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/lodash": "^4.17.15",
+    "standard-version": "^9.5.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
