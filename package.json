@@ -1,21 +1,24 @@
 {
-  "name": "ds-npm",
+  "name": "mc-mp",
   "version": "1.0.1",
   "description": "A project command search GPT",
   "type": "commonjs",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "bin",
+    "config.json"
   ],
   "scripts": {
     "test": "jest",
-    "build": "NODE_ENV=production tsc"
+    "build": "NODE_ENV=production tsc",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "search with chat model for command"
   ],
-  "author": "Your Name",
+  "author": "mzp",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -26,16 +29,15 @@
   },
   "dependencies": {
     "@types/node": "^22.13.1",
-    "commader": "^1.0.0",
     "commander": "^13.1.0",
     "express": "^4.21.2",
     "lodash": "^4.17.21",
-    "openai": "^4.79.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "openai": "^4.79.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
-    "@types/lodash": "^4.17.15"
+    "@types/lodash": "^4.17.15",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }
