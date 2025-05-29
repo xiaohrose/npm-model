@@ -1,4 +1,5 @@
 export interface IModelConfig {
+    name: string;
     model: string;
     url: string;
     key: string | undefined;

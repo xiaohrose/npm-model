@@ -3,6 +3,13 @@ import path from 'path';
 import { runServerShell, getCurrentModelName, getConfigModels } from './util';
 import { program } from 'commander';
 import { isProd } from './util/env'
+import fs from 'fs';
+import { IModelConfig } from './types';
+
+interface Config {
+  default?: string;
+  models: Record<string, IModelConfig>;
+}
 
 interface ChatOptions {
   type?: string;
@@ -85,6 +92,55 @@ program
 
     console.log('\nAvailable Models:');
     console.table(tableData);
+  });
+
+// 删除模型配置
+program
+  .command('delete <model>')
+  .description('Delete model configuration by model name')
+  .action((model: string) => {
+    const configPath = path.join(__dirname, '../config.json');
+    try {
+      const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const models = config.models;
+
+      // 查找匹配的模型
+      const keysToDelete = Object.entries(models)
+        .filter(([_, config]) => config.model === model)
+        .map(([key]) => key);
+
+      if (keysToDelete.length === 0) {
+        console.log(`No model found with name: ${model}`);
+        return;
+      }
+
+      // 删除匹配的模型
+      keysToDelete.forEach(key => {
+        delete models[key];
+        console.log(`Deleted model configuration for key: ${key}`);
+      });
+
+      console.log(config, '23');
+
+
+      // // 如果删除的是当前默认模型，重置默认模型
+      // if (config.default && keysToDelete.includes(config.default)) {
+      //   const remainingModels = Object.keys(models);
+      //   if (remainingModels.length > 0) {
+      //     config.default = remainingModels[0];
+      //     console.log(`Default model reset to: ${config.default}`);
+      //   } else {
+      //     delete config.default;
+      //     console.log('No models remaining, default model removed');
+      //   }
+      // }
+
+      // // 更新配置文件
+      // fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+      // console.log('Configuration file updated successfully');
+    } catch (error) {
+      console.error('Error updating configuration:', error);
+    }
   });
 
 // 解析命令行参数

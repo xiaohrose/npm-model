@@ -1,70 +1,83 @@
 {
   "default": "chat",
-  "models": {
-    "c": {
+  "models": [
+    {
+      "name": "c",
       "model": "deepseek-chat",
       "url": "https://api.deepseek.com",
       "key": "KEY"
     },
-    "r": {
+    {
+      "name": "r",
       "model": "deepseek-reasoner",
       "url": "https://api.deepseek.com",
       "key": "KEY"
     },
-    "chat": {
+    {
+      "name": "chat",
       "model": "deepseek-chat",
       "url": "https://api.deepseek.com",
       "key": "KEY"
     },
-    "reasoner": {
+    {
+      "name": "reasoner",
       "model": "deepseek-reasoner",
       "url": "https://api.deepseek.com",
       "key": "KEY"
     },
-    "dou": {
+    {
+      "name": "dou",
       "model": "doubao-1-5-pro-32k-250115",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
     },
-    "dou-dr1": {
+    {
+      "name": "dou-dr1",
       "model": "deepseek-r1-250120",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
     },
-    "dou-pro": {
+    {
+      "name": "dou-pro",
       "model": "doubao-1-5-pro-256k-250115",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
     },
-    "d": {
+    {
+      "name": "d",
       "model": "ep-20250124104505-6tsdw",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
     },
-    "t": {
+    {
+      "name": "t",
       "model": "hunyuan-turbo",
       "url": "https://api.hunyuan.cloud.tencent.com/v1",
       "key": "TENCENT_KEY"
     },
-    "tencent": {
+    {
+      "name": "tencent",
       "model": "hunyuan-turbo",
       "url": "https://api.hunyuan.cloud.tencent.com/v1",
       "key": "TENCENT_KEY"
     },
-    "qm": {
+    {
+      "name": "qm",
       "model": "qwen-plus",
       "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "key": "QIAN_WEN"
     },
-    "qo": {
+    {
+      "name": "qo",
       "model": "qwen-omni-turbo",
       "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "key": "QIAN_WEN"
     },
-    "qwq": {
+    {
+      "name": "qwq",
       "model": "qwq-plus",
       "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "key": "QIAN_WEN"
     }
-  }
+  ]
 }

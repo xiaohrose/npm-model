@@ -3,10 +3,9 @@ import path from 'path';
 import { spawn } from 'node:child_process'
 import { IModelConfig, TModelKey } from '@/types'
 
-
 interface Config {
     default: TModelKey;
-    models: Record<TModelKey, IModelConfig>
+    models: IModelConfig[];
 }
 
 interface PackageJson {
@@ -52,25 +51,36 @@ export function getCurrentModelName(): string {
     }
 }
 
-export function getConfigModels(): Record<TModelKey, IModelConfig> {
+export function getConfigModels(): Record<string, IModelConfig> {
     try {
         const config: Config = JSON.parse(fs.readFileSync(getConfigPath(), 'utf8'));
         if (config.models) {
-            return config.models;
+            // 将数组转换为以name为key的对象
+            return config.models.reduce((acc, model) => {
+                acc[model.name] = model;
+                return acc;
+            }, {} as Record<string, IModelConfig>);
         }
-        return {} as Record<TModelKey, IModelConfig>;
+        return {};
     } catch (error) {
         console.error('Error reading config models:', error);
-        return {} as Record<TModelKey, IModelConfig>;
+        return {};
     }
 }
 
-export function setConfigModels(name: TModelKey, models: IModelConfig): boolean {
+export function setConfigModels(name: TModelKey, modelConfig: IModelConfig): boolean {
     try {
         const configPath = getConfigPath();
         const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
-        config.models[name] = models;
+        // 查找并更新或添加模型配置
+        const index = config.models.findIndex(m => m.name === name);
+        if (index !== -1) {
+            config.models[index] = { ...modelConfig, name };
+        } else {
+            config.models.push({ ...modelConfig, name });
+        }
+
         fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
         return true;
     } catch (error) {
@@ -106,7 +116,6 @@ export function runServerShell(): void {
     }
 }
 
-
 export function readChats(): Array<{ name: string; date: string; title: string }> {
     const chatDir = path.join(__dirname, '../chats');
 
@@ -128,7 +137,6 @@ export function readChats(): Array<{ name: string; date: string; title: string }
 
     return chatDetails;
 }
-
 
 export function readChatDataByFile(file: string): Array<{ role: 'user' | 'assistant'; timestamp: number; content: string }> {
     const chatFilePath = path.join(__dirname, `../chats/${file}`);
