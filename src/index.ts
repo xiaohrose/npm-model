@@ -1,6 +1,6 @@
 import { spawn } from 'child_process';
 import path from 'path';
-import { runServerShell, getCurrentModelName, getConfigModels } from './util';
+import { runServerShell, getCurrentModelName, getConfigModels, setConfigModels } from './util';
 import { program } from 'commander';
 import { isProd } from './util/env'
 import fs from 'fs';
@@ -8,7 +8,7 @@ import { IModelConfig } from './types';
 
 interface Config {
   default?: string;
-  models: Record<string, IModelConfig>;
+  models: IModelConfig[];
 }
 
 interface ChatOptions {
@@ -94,50 +94,79 @@ program
     console.table(tableData);
   });
 
+// 添加模型配置
+program
+  .command('add')
+  .description('Add a new model configuration')
+  .option('-e, --name <name>', 'Model name (key)')
+  .option('-m, --model <model>', 'Model identifier')
+  .option('-u, --url <url>', 'API URL')
+  .option('-k, --key <key>', 'Environment variable name for API key')
+  .action((options) => {
+    // 检查是否提供了所有必需的参数
+    const requiredFields = ['name', 'model', 'url', 'key'];
+    const missingFields = requiredFields.filter(field => !options[field]);
+
+    if (missingFields.length > 0) {
+      console.error('Missing required fields:', missingFields.join(', '));
+      console.log('\nUsage example:');
+      console.log('xxx add -nm gpt4 -m gpt-4 -u https://api.openai.com/v1 -k OPENAI_KEY');
+      return;
+    }
+
+    const modelConfig: IModelConfig = {
+      name: options.name,
+      model: options.model,
+      url: options.url,
+      key: options.key
+    };
+
+    if (setConfigModels(options.name, modelConfig)) {
+      console.log('Model configuration added successfully');
+      console.log('Added configuration:', modelConfig);
+    } else {
+      console.error('Failed to add model configuration');
+    }
+  });
+
 // 删除模型配置
+// TODO 这里可以加个简称
 program
   .command('delete <model>')
   .description('Delete model configuration by model name')
-  .action((model: string) => {
+  .action((name: string) => {
     const configPath = path.join(__dirname, '../config.json');
     try {
       const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       const models = config.models;
 
       // 查找匹配的模型
-      const keysToDelete = Object.entries(models)
-        .filter(([_, config]) => config.model === model)
-        .map(([key]) => key);
+      const items = models
+        .filter((config) => config.name === name)
 
-      if (keysToDelete.length === 0) {
-        console.log(`No model found with name: ${model}`);
+      if (items.length === 0) {
+        console.log(`No model found with name: ${name}`);
         return;
       }
 
       // 删除匹配的模型
-      keysToDelete.forEach(key => {
-        delete models[key];
-        console.log(`Deleted model configuration for key: ${key}`);
-      });
+      config.models = models.filter(item => item.name !== name)
 
-      console.log(config, '23');
+      // 如果删除的是当前默认模型，重置默认模型
+      if (config.default && items.some(item => item.name === config.default)) {
+        const remainingModels = config.models;
+        if (remainingModels.length > 0) {
+          config.default = remainingModels[0].name;
+          console.log(`Default model reset to: ${config.default}`);
+        } else {
+          delete config.default;
+          console.log('No models remaining, default model removed');
+        }
+      }
 
-
-      // // 如果删除的是当前默认模型，重置默认模型
-      // if (config.default && keysToDelete.includes(config.default)) {
-      //   const remainingModels = Object.keys(models);
-      //   if (remainingModels.length > 0) {
-      //     config.default = remainingModels[0];
-      //     console.log(`Default model reset to: ${config.default}`);
-      //   } else {
-      //     delete config.default;
-      //     console.log('No models remaining, default model removed');
-      //   }
-      // }
-
-      // // 更新配置文件
-      // fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-      // console.log('Configuration file updated successfully');
+      // 更新配置文件
+      fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+      console.log('Configuration file updated successfully');
     } catch (error) {
       console.error('Error updating configuration:', error);
     }

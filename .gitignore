@@ -7,3 +7,4 @@
 ./install.sh
 ./up.sh
 ./update.sh
+./config.json
