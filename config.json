@@ -12,6 +12,72 @@
       "model": "deepseek-reasoner",
       "url": "https://api.deepseek.com",
       "key": "KEY"
+    },
+    {
+      "name": "chat",
+      "model": "deepseek-chat",
+      "url": "https://api.deepseek.com",
+      "key": "KEY"
+    },
+    {
+      "name": "reasoner",
+      "model": "deepseek-reasoner",
+      "url": "https://api.deepseek.com",
+      "key": "KEY"
+    },
+    {
+      "name": "dou",
+      "model": "doubao-1-5-pro-32k-250115",
+      "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
+    {
+      "name": "dou-dr1",
+      "model": "deepseek-r1-250120",
+      "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
+    {
+      "name": "dou-pro",
+      "model": "doubao-1-5-pro-256k-250115",
+      "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
+    {
+      "name": "d",
+      "model": "ep-20250124104505-6tsdw",
+      "url": "https://ark.cn-beijing.volces.com/api/v3/",
+      "key": "DOU_KEY"
+    },
+    {
+      "name": "t",
+      "model": "hunyuan-turbo",
+      "url": "https://api.hunyuan.cloud.tencent.com/v1",
+      "key": "TENCENT_KEY"
+    },
+    {
+      "name": "tencent",
+      "model": "hunyuan-turbo",
+      "url": "https://api.hunyuan.cloud.tencent.com/v1",
+      "key": "TENCENT_KEY"
+    },
+    {
+      "name": "qm",
+      "model": "qwen-plus",
+      "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "key": "QIAN_WEN"
+    },
+    {
+      "name": "qo",
+      "model": "qwen-omni-turbo",
+      "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "key": "QIAN_WEN"
+    },
+    {
+      "name": "qwq",
+      "model": "qwq-plus",
+      "url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "key": "QIAN_WEN"
     }
   ]
 }
