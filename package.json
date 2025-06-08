@@ -1,45 +1,46 @@
 {
-  "name": "mc-mp",
-  "version": "1.3.0",
-  "description": "A project command search GPT",
-  "type": "commonjs",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "bin",
-    "config.json"
-  ],
-  "scripts": {
-    "test": "jest",
-    "build": "NODE_ENV=production tsc",
-    "prepublishOnly": "NODE_ENV=production npm run build",
-    "release": "standard-version"
-  },
-  "keywords": [
-    "search with chat model for command"
-  ],
-  "author": "mzp",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yourusername/deepseek-demo.git"
-  },
-  "bin": {
-    "mc": "./bin/mchat.js"
-  },
-  "dependencies": {
-    "@types/node": "^22.13.1",
-    "commander": "^13.1.0",
-    "express": "^4.21.2",
-    "lodash": "^4.17.21",
-    "openai": "^4.79.1"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/lodash": "^4.17.15",
-    "standard-version": "^9.5.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
-  }
+    "name": "mc-mp",
+    "version": "1.3.1",
+    "description": "A project command search GPT",
+    "type": "commonjs",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "bin",
+        "config.json",
+        "shells"
+    ],
+    "scripts": {
+        "test": "jest",
+        "build": "NODE_ENV=production tsc",
+        "prepublishOnly": "NODE_ENV=production npm run build",
+        "release": "standard-version"
+    },
+    "keywords": [
+        "search with chat model for command"
+    ],
+    "author": "mzp",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yourusername/deepseek-demo.git"
+    },
+    "bin": {
+        "mc": "./bin/mchat.js"
+    },
+    "dependencies": {
+        "@types/node": "^22.13.1",
+        "commander": "^13.1.0",
+        "express": "^4.21.2",
+        "lodash": "^4.17.21",
+        "openai": "^4.79.1"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.0",
+        "@types/lodash": "^4.17.15",
+        "standard-version": "^9.5.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.3"
+    }
 }
