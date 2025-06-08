@@ -46,8 +46,8 @@ program
       args.push('-n', options.history);
     }
 
-    const command = isProd ? 'node' : 'ts-node';
-    const mainPath = path.join(__dirname, 'main.js');
+    const command = 'node'
+    const mainPath = path.join(__dirname, 'main.js')
     spawn(command, [mainPath, ...args], {
       stdio: 'inherit',
       shell: true
