@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/yourusername/deepseek-demo/compare/v1.3.1...v1.3.2) (2025-06-08)
+
+
+### Bug Fixes
+
+* 修复Cannot find module './main.ts 错误 ([46aa59b](https://github.com/yourusername/deepseek-demo/commit/46aa59ba4dba76cf6699bc66ae9f87e5888a54b2))
+
 ### [1.3.1](https://github.com/yourusername/deepseek-demo/compare/v1.3.0...v1.3.1) (2025-06-08)
 
 ## [1.3.0](https://github.com/yourusername/deepseek-demo/compare/v1.2.0...v1.3.0) (2025-05-29)
