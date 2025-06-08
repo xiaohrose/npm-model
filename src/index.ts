@@ -47,7 +47,7 @@ program
     }
 
     const command = isProd ? 'node' : 'ts-node';
-    const mainPath = isProd ? path.join(__dirname, 'main.js') : path.join(__dirname, '..', 'src', 'main.ts');
+    const mainPath = path.join(__dirname, 'main.js');
     spawn(command, [mainPath, ...args], {
       stdio: 'inherit',
       shell: true

@@ -1,15 +1,30 @@
 
 #### 功能
-一个npm包，npm 拉取全局之后，可以在shell中流式获取大模型调用，前提配置好 model、name、api-key。
 
-优点： 完全自己在terminal 中直接使用；只对程序猿友好；可切换不同model，目前需要源代码添加；可以自己选择历史几条数据；
+npm 下载 mc-mp 包，通过命令行  `mc xxx` 使。可以方便的在终端使用大模型；同时可以添加自己的大模型，选择自己喜欢的模型；默认选择一条历史记录，可以选择保留多少历史记录（一次有效）。
 
-### 使用方式
-* 拉取包
-* 选择模型
-* chmod 555 ./install.sh  ./uninstall.sh
-* ./install.sh [-k xxx] [-v xxxx](可以多次添加key)
+后续，将自己的提问保留在自己本机方便自己追溯（目前只保留了相关数据，还没实现浏览历史数据，），接下来准备通过起个本地 web 服务来浏览，自己的历史数据。
+
+
+##### 使用方式
+1， 下载
+```bash
+npm install mc-mp -g
+```
+2，本包原理是通过大模型开放接口调用，所以需要去对应模型平台去申请 KEY， 然后在配置 ~/.bashrc 中配置 KEY=xxxx,例如，[deepseek](https://platform.deepseek.com/usage)
+
+
+2，使用
+```bash
+#默认 deepseek v3大模型
+mc content
+# 携带 x 条上下文
+mc -n x content
+# 切换成 x 模型
+mc -t x content
+# 配置中的大模型列表
+mc list
+```
 
 #### todo:
-* 命令行管理模型
-* 记忆选择当前模型类型
+* 浏览历史数据
