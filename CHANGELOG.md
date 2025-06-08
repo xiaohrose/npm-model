@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/yourusername/deepseek-demo/compare/v1.3.2...v1.4.0) (2025-06-08)
+
+
+### Features
+
+* add cross-env ([9786f47](https://github.com/yourusername/deepseek-demo/commit/9786f47731f87df80fbbfea6d7f1c2996b3059b8))
+* test ([044523e](https://github.com/yourusername/deepseek-demo/commit/044523ed8bbdeca728506be2e85fb46d029d1369))
+
 ### [1.3.2](https://github.com/yourusername/deepseek-demo/compare/v1.3.1...v1.3.2) (2025-06-08)
 
 
