@@ -20,11 +20,14 @@
     "keywords": [
         "search with chat model for command"
     ],
-    "author": "mzp",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/yourusername/deepseek-demo.git"
+        "url": "https://github.com/xiaohrose/npm-model.git"
+    },
+    "author": {
+        "name": "mzp",
+        "email": "1778911348@qq.com"
     },
     "bin": {
         "mc": "./bin/mchat.js"
