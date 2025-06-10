@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/yourusername/deepseek-demo/compare/v1.3.1...v1.4.0) (2025-06-10)
+
+
+### Features
+
+* add components ([798df21](https://github.com/yourusername/deepseek-demo/commit/798df2151935cc3f7c42aed6b35a1287398c5c9d))
+* add cross-env ([9786f47](https://github.com/yourusername/deepseek-demo/commit/9786f47731f87df80fbbfea6d7f1c2996b3059b8))
+* test ([044523e](https://github.com/yourusername/deepseek-demo/commit/044523ed8bbdeca728506be2e85fb46d029d1369))
+* update package ([5815319](https://github.com/yourusername/deepseek-demo/commit/5815319341ee6490aaf1dbfdc7f16826aa6a2662))
+
+
+### Bug Fixes
+
+* 修复Cannot find module './main.ts 错误 ([46aa59b](https://github.com/yourusername/deepseek-demo/commit/46aa59ba4dba76cf6699bc66ae9f87e5888a54b2))
+
 ### [1.3.2](https://github.com/yourusername/deepseek-demo/compare/v1.3.1...v1.3.2) (2025-06-08)
 
 
