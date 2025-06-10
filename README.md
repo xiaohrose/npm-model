@@ -24,6 +24,8 @@ mc -n x content
 mc -t x content
 # 配置中的大模型列表
 mc list
+# 设置默认 mode
+mc set-default xxx
 ```
 
 #### todo:

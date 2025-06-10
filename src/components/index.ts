@@ -1,1 +1,0 @@
-export { OperatorColumns } from './operatorColumns'

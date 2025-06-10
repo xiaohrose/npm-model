@@ -172,6 +172,33 @@ program
     }
   });
 
+program
+  .command('set-default <model>')
+  .description('Set default model by model name')
+  .action((name: string) => {
+    const configPath = path.join(__dirname, '../config.json');
+    try {
+      const config: Config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      const models = config.models;
+
+      // 检查模型是否存在
+      const modelExists = models.some(model => model.name === name);
+      if (!modelExists) {
+        console.error(`Error: Model "${name}" does not exist in configuration`);
+        return;
+      }
+
+      // 设置默认模型
+      config.default = name;
+
+      // 更新配置文件
+      fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+      console.log(`Default model set to: ${name} successfully`);
+    } catch (error) {
+      console.error('Error updating configuration:', error);
+    }
+  });
+
 // 解析命令行参数
 program.parse(process.argv);
 
