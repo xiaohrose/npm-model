@@ -2,18 +2,6 @@
   "default": "chat",
   "models": [
     {
-      "name": "c",
-      "model": "deepseek-chat",
-      "url": "https://api.deepseek.com",
-      "key": "KEY"
-    },
-    {
-      "name": "r",
-      "model": "deepseek-reasoner",
-      "url": "https://api.deepseek.com",
-      "key": "KEY"
-    },
-    {
       "name": "chat",
       "model": "deepseek-chat",
       "url": "https://api.deepseek.com",
@@ -42,18 +30,6 @@
       "model": "doubao-1-5-pro-256k-250115",
       "url": "https://ark.cn-beijing.volces.com/api/v3/",
       "key": "DOU_KEY"
-    },
-    {
-      "name": "d",
-      "model": "ep-20250124104505-6tsdw",
-      "url": "https://ark.cn-beijing.volces.com/api/v3/",
-      "key": "DOU_KEY"
-    },
-    {
-      "name": "t",
-      "model": "hunyuan-turbo",
-      "url": "https://api.hunyuan.cloud.tencent.com/v1",
-      "key": "TENCENT_KEY"
     },
     {
       "name": "tencent",
