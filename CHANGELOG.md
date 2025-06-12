@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/xiaohrose/npm-model/compare/v1.4.1...v1.5.0) (2025-06-12)
+
+
+### Features
+
+* add components ([7b7ff83](https://github.com/xiaohrose/npm-model/commit/7b7ff83fc4a6c644c67545d3d3b46b53f9622fa4))
+* optimizition config file ([935b7bd](https://github.com/xiaohrose/npm-model/commit/935b7bdcdd545e362115b3a63d46cff8fbd04fc9))
+
 ### [1.4.1](https://github.com/xiaohrose/npm-model/compare/v1.4.0...v1.4.1) (2025-06-09)
 
 ## [1.4.0](https://github.com/yourusername/deepseek-demo/compare/v1.3.2...v1.4.0) (2025-06-08)
