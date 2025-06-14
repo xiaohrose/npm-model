@@ -4,6 +4,9 @@ import path from 'path';
 import { getModelConfig } from './constants';
 import { omit } from 'lodash'
 import { IModelConfig } from '@/types'
+import os from 'os';
+
+const configDir = path.join(os.homedir(), '.mc-mp');
 
 // 获取命令行参数
 const params = process.argv.slice(2);
@@ -45,12 +48,12 @@ const openai = new OpenAI({
 });
 
 // 确保目录存在
-if (!fs.existsSync(path.join(__dirname, 'chats'))) {
-    fs.mkdirSync(path.join(__dirname, 'chats'), { recursive: true });
+if (!fs.existsSync(path.join(configDir, 'chats'))) {
+    fs.mkdirSync(path.join(configDir, 'chats'), { recursive: true });
 }
 
 // 将 HISTORY_FILE 的路径修改为相对于当前项目目录，并在文件名中加入模型信息
-const HISTORY_FILE = path.join(__dirname, 'chats', `${new Date().toISOString().split('T')[0]}_${currentModel.model}_chat_history.json`);
+const HISTORY_FILE = path.join(configDir, 'chats', `${new Date().toISOString().split('T')[0]}_${currentModel.model}_chat_history.json`);
 
 // 添加接口定义
 interface HistoryEntry {

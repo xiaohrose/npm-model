@@ -2,7 +2,6 @@ import { spawn } from 'child_process';
 import path from 'path';
 import { runServerShell, getCurrentModelName, getConfigModels, setConfigModels } from './util';
 import { program } from 'commander';
-import { isProd } from './util/env'
 import fs from 'fs';
 import { IModelConfig } from './types';
 
