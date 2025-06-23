@@ -155,7 +155,7 @@ export async function main() {
 
         const completion = await openai.chat.completions.create({
             messages: [
-                { role: "system", content: "You are a helpful assistant." },
+                { role: "system", content: "You are a helpful assistant. When answering, ensure responses are structured and thorough. use chinese" },
                 ...latestMessageHistory
             ],
             model: currentModel.model,
