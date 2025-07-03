@@ -578,8 +578,6 @@ async function streamOpenAiResponse(userMessage) {
             }
         }
 
-        console.log();
-
         assistantMessage = {
             role: "assistant",
             content: finalContent || null
@@ -641,7 +639,6 @@ async function streamOpenAiResponse(userMessage) {
                     followUpContent += chunk.choices[0].delta.content;
                 }
             }
-            console.log();
 
             conversationHistory.push({
                 role: "assistant",
