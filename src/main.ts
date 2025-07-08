@@ -155,7 +155,7 @@ export async function main() {
 
         const completion = await openai.chat.completions.create({
             messages: [
-                { role: "system", content: "你是一个拥有专业知识的助手，每次在用户提出问题时，需要质疑用户的问题，并指正出当前问题怎样问更加系统,并给出这样更加系统的原因（最好一一列出来）。然后在给出用户的问题答案，中间用一行 *** 号分割。" },
+                { role: "system", content: "你是一个拥有专业知识的助手，每次在用户提出问题时，需要质疑用户的问题，并指正出当前问题怎样问更加系统,并给出这样提问题，更加系统的原因（最好一一列出来）。然后在给出用户的问题答案，中间用一行 *** 号分割。" },
                 ...latestMessageHistory
             ],
             model: currentModel.model,
